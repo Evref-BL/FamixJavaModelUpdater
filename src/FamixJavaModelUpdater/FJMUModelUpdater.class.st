@@ -243,10 +243,13 @@ FJMUModelUpdater >> visitFASTJavaVariableDeclarator: aFASTJavaVariableDeclarator
 			                 from: aFASTJavaVariableDeclarator ].
 	famixVariable name: aFASTJavaVariableDeclarator variable name.
 	(aFASTJavaVariableDeclarator atScope: FASTJavaVarDeclStatement)
-		anyOne modifiers do: [ :modifier | 
-		modifier token = 'public' ifTrue: [ famixVariable isPublic: true ].
-		modifier token = 'final' ifTrue: [ famixVariable isFinal: true ].
-		modifier token = 'static' ifTrue: [ famixVariable isClassSide: true ] ].
+		anyOne modifiers do: [ :modifier |  
+        (modifier respondsTo: #token) ifTrue: [ 
+            modifier token = 'public' ifTrue: [ famixVariable isPublic: true ].
+            modifier token = 'final' ifTrue: [ famixVariable isFinal: true ].
+            modifier token = 'static' ifTrue: [ famixVariable isClassSide: true ].
+        ].
+    ].
 	(aFASTJavaVariableDeclarator varDeclOwner type isKindOf:
 		 FASTJavaClassTypeExpression) ifTrue: [ 
 		(self retrieveClassFromModel:
