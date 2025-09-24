@@ -3,7 +3,9 @@ Trait {
 	#instVars : [
 		'famixModel',
 		'fileAnchorPath',
-		'fastModel'
+		'fastModel',
+		'newStartPosition',
+		'newEndPosition'
 	],
 	#category : 'FamixJavaModelUpdater-Updater',
 	#package : 'FamixJavaModelUpdater',
@@ -75,10 +77,34 @@ TFJMUEntityFactory >> fileAnchorPath: anObject [
 TFJMUEntityFactory >> generateAnchorBasedOn: famixSourceAnchor for: aFastJavaEntity [
 
 	^ (self create: FamixJavaIndexedFileAnchor)
-		  startPos: aFastJavaEntity startPos;
-		  endPos: aFastJavaEntity endPos;
-		  fileName: famixSourceAnchor;
+		  startPos: self newStartPosition + aFastJavaEntity startPos - 1 ;
+		  endPos: self newStartPosition + aFastJavaEntity endPos - 1 ;
+		  fileName: famixSourceAnchor fileName ;
 		  yourself
+]
+
+{ #category : 'accessing' }
+TFJMUEntityFactory >> newEndPosition [
+
+	^ newEndPosition
+]
+
+{ #category : 'accessing' }
+TFJMUEntityFactory >> newEndPosition: anObject [
+
+	newEndPosition := anObject
+]
+
+{ #category : 'accessing' }
+TFJMUEntityFactory >> newStartPosition [
+
+	^ newStartPosition
+]
+
+{ #category : 'accessing' }
+TFJMUEntityFactory >> newStartPosition: anObject [
+
+	newStartPosition := anObject
 ]
 
 { #category : 'model - create' }
