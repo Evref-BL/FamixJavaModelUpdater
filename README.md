@@ -10,7 +10,7 @@ I update a FamixJava model based on a FASTJava AST.
 
 ```st
 Metacello new
-  githubUser: 'badetitou' project: 'FamixJavaModelUpdater' commitish: 'v2' path: 'src';
+  githubUser: 'evref-bl' project: 'FamixJavaModelUpdater' commitish: 'v2' path: 'src';
   baseline: 'FamixJavaModelUpdater';
   load
 ```
