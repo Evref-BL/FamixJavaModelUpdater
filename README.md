@@ -19,7 +19,7 @@ Metacello new
 
 ```st
 spec baseline: 'FamixJavaModelUpdater' with: [ 
-  spec repository: 'github://badetitou/FamixJavaModelUpdater:v2/src' ].
+  spec repository: 'github://evref-bl/FamixJavaModelUpdater:v2/src' ].
 ```
 
 ## Usage
