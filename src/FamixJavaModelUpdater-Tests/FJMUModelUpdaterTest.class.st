@@ -191,7 +191,7 @@ FJMUModelUpdaterTest >> testVisitFASTJavaParameter [
 { #category : 'tests' }
 FJMUModelUpdaterTest >> testVisitFASTJavaVariableDeclarator [
 
-	| fasVariableDeclarator fastVarDeclStatement fastClassDeclaration fastJavaModel famixClass |
+	| fasVariableDeclarator fastVarDeclStatement fastClassDeclaration fastJavaModel famixClass annotationValue modifierPrivate |
 	fastJavaModel := FASTJavaModel new.
 	fastClassDeclaration := FASTJavaClassDeclaration new.
 	fastVarDeclStatement := FASTJavaVarDeclStatement new.
@@ -200,16 +200,28 @@ FJMUModelUpdaterTest >> testVisitFASTJavaVariableDeclarator [
 	famixClass := FamixJavaClass new.
 	fastClassDeclaration famixTypeDefinition: famixClass.
 	famixModel add: famixClass.
+
+	annotationValue := FASTJavaAnnotation new 
+		name: 'Value';
+		elements: { (FASTJavaStringLiteral new primitiveValue: '${com.example}').}.
+	fastVarDeclStatement addModifier: annotationValue.
+	modifierPrivate := FASTJavaModifier new token: 'private'.
+	fastVarDeclStatement addModifier: modifierPrivate.
+	
 	fasVariableDeclarator variable: (FASTJavaVariableExpression new
 			 name: 'variableName';
 			 yourself).
+	
 	fastVarDeclStatement addDeclarator: fasVariableDeclarator.
 	fastJavaModel addAll: { fastClassDeclaration. fastVarDeclStatement. fasVariableDeclarator }.
-	fasVariableDeclarator accept: modelUpdater.
+	fastVarDeclStatement accept: modelUpdater.
 	self
 		assert: (famixModel allWithType: FamixJavaAttribute) size
 		equals: 1.
 	self
 		assert: (famixModel allWithType: FamixJavaAttribute) anyOne name
-		equals: 'variableName'
+		equals: 'variableName'.
+	self
+		assert: (famixModel allWithType: FamixJavaAttribute) first isPrivate
+		equals: true.
 ]
