@@ -77,11 +77,14 @@ TFJMUEntityFactory >> fileAnchorPath: anObject [
 TFJMUEntityFactory >> generateAnchorBasedOn: famixSourceAnchor for: aFastJavaEntity [
 
 	| safeStart |
-	safeStart := self newStartPosition ifNil: [ 0 ].
+	
+	safeStart :=  self newStartPosition
+		ifNotNil: [ :pos | pos - 1 ]
+		ifNil: [ 0 ].
 
 	^ (self create: FamixJavaIndexedFileAnchor)
-		  startPos: safeStart + aFastJavaEntity startPos - 1 ;
-		  endPos: safeStart + aFastJavaEntity endPos - 1 ;
+		  startPos: safeStart + aFastJavaEntity startPos ;
+		  endPos: safeStart + aFastJavaEntity endPos ;
 		  fileName: famixSourceAnchor ;
 		  yourself
 ]
