@@ -146,7 +146,7 @@ FJMUModelUpdater >> visitFASTJavaClassDeclaration: aFastJavaClassDeclaration [
 		              from: aFastJavaClassDeclaration.
 	famixClass name: aFastJavaClassDeclaration name.
 	famixClass fastTypeDefinition: aFastJavaClassDeclaration.
-
+	
 	(aFastJavaClassDeclaration declarations select: [ :decl |
 		 decl isKindOf: FASTJavaMethodEntity ]) do: [ :method |
 		(method accept: self) parentType: famixClass ].
@@ -191,29 +191,30 @@ FJMUModelUpdater >> visitFASTJavaClassDeclaration: aFastJavaClassDeclaration [
 FJMUModelUpdater >> visitFASTJavaMethodEntity: aFastMethod [
 
 	| famixMethod |
+	
 	famixMethod := self create: FamixJavaMethod from: aFastMethod.
 	aFastMethod famixMethod: famixMethod.
 	famixMethod name: aFastMethod name.
-	aFastMethod parameters do: [ :fastParam | 
+	aFastMethod parameters do: [ :fastParam |
 		famixMethod addParameter: (fastParam accept: self) ].
 	aFastMethod children
 		select: [ :child | child isKindOf: FASTJavaAnnotation ]
-		thenDo: [ :fastAnnotation | 
-			(fastAnnotation accept: self) ifNotNil: [ :annotationInstance | 
+		thenDo: [ :fastAnnotation |
+			(fastAnnotation accept: self) ifNotNil: [ :annotationInstance |
 				famixMethod addAnnotationInstance: annotationInstance ] ].
-	aFastMethod throws do: [ :throw | 
-		(self retrieveClassFromModel: throw typeName name) ifNotNil: [ 
+	aFastMethod throws do: [ :throw |
+		(self retrieveClassFromModel: throw typeName name) ifNotNil: [
 			:aClass | famixMethod addDeclaredException: aClass ] ].
 	aFastMethod statements do: [ :statement | statement accept: self ].
 
-	(aFastMethod type isNil or: [ 
-		 aFastMethod type isKindOf: FASTJavaPrimitiveTypeExpression ]) 
-		ifFalse: [ 
+	(aFastMethod type isNil or: [
+		 aFastMethod type isKindOf: FASTJavaPrimitiveTypeExpression ])
+		ifFalse: [
 			(self retrieveClassFromModel:
-				 (self resolveTypeNameOf: aFastMethod type)) ifNotNil: [ :aClass | 
+				 (self resolveTypeNameOf: aFastMethod type)) ifNotNil: [ :aClass |
 				famixMethod declaredType: aClass ] ].
-	(aFastMethod modifiers select: [ :modifier | 
-		 modifier isKindOf: FASTJavaModifier ]) do: [ :modifier | 
+	(aFastMethod modifiers select: [ :modifier |
+		 modifier isKindOf: FASTJavaModifier ]) do: [ :modifier |
 		self addModifier: modifier token to: famixMethod ].
 	^ famixMethod
 ]
